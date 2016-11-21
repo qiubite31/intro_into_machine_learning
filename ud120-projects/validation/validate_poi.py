@@ -27,6 +27,26 @@ labels, features = targetFeatureSplit(data)
 
 
 
-### it's all yours from here forward!  
+### it's all yours from here forward!
+from sklearn.tree import tree 
+from sklearn.metrics import accuracy_score
+from sklearn.cross_validation import train_test_split
+
+# using the default data to train will get the higher training accuracy 0.989473684211
+# that's overfit
+clf = tree.DecisionTreeClassifier()
+clf = clf.fit(features, labels)
+pred = clf.predict(features)
+acc = accuracy_score(labels, pred)
+print acc
+# split dataset into train and test dataset
+# using test dataset to test the traing model will get the lower accuracy 0.724137931034
+# split traing/test dataset will prevent model overfit
+X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=0.3, random_state=42)
+clf = clf.fit(X_train, y_train)
+pred = clf.predict(X_test)
+acc = accuracy_score(y_test, pred)
+print acc
+
 
 
