@@ -24,6 +24,16 @@ features_train, features_test, labels_train, labels_test = preprocess()
 
 #########################################################
 ### your code goes here ###
+from sklearn import tree
+from sklearn.metrics import accuracy_score
+# use min_samples_split=40 to train decision tree model
+# the accuracy is 0.977815699659
+# use the 1% feature, the accuracy is 0.967007963595
+clf = tree.DecisionTreeClassifier(min_samples_split=40)
+clf.fit(features_train, labels_train)
+pred = clf.predict(features_test)
+acc = accuracy_score(labels_test, pred)
+print acc
 
 
 #########################################################
