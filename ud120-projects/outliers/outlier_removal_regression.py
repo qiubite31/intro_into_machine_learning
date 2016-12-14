@@ -26,12 +26,27 @@ ages_train, ages_test, net_worths_train, net_worths_test = train_test_split(ages
 ### fill in a regression here!  Name the regression object reg so that
 ### the plotting code below works, and you can see what your regression looks like
 
+from sklearn.linear_model import LinearRegression
 
+reg = LinearRegression()
+reg.fit(ages_train, net_worths_train)
+print 'coef:', reg.coef_
+print 'intercept:', reg.intercept_
+print 'test data score:', reg.score(ages_test, net_worths_test)
 
+from outlier_cleaner import outlierCleaner
 
+clean_data = outlierCleaner(reg.predict(ages_train), ages_train, net_worths_train)
+ages_clean = numpy.array([[age[0]] for age in clean_data])
+net_worths_clean = numpy.array([[age[1]] for age in clean_data])
 
+print 'after clean 10% outlier data:'
 
-
+reg = LinearRegression()
+reg.fit(ages_clean, net_worths_clean)
+print 'coef:', reg.coef_
+print 'intercept:', reg.intercept_
+print 'test data score:', reg.score(ages_test, net_worths_test)
 
 
 
