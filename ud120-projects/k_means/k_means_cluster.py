@@ -43,13 +43,26 @@ data_dict = pickle.load( open("../final_project/final_project_dataset.pkl", "r")
 ### there's an outlier--remove it! 
 data_dict.pop("TOTAL", 0)
 
+# find the max and min of exercised stock options
+data_dict_options = {k:v for k,v in data_dict.items() if data_dict[k]['exercised_stock_options'] != 'NaN'}
+sorted_data = sorted(data_dict_options.items(), key=lambda item: item[1]['exercised_stock_options'])
+print 'min', sorted_data[0][1]['exercised_stock_options']
+print 'max', sorted_data[len(sorted_data)-1][1]['exercised_stock_options']
+
+# find the max and min of salary
+data_dict_options = {k:v for k,v in data_dict.items() if data_dict[k]['salary'] != 'NaN'}
+sorted_data = sorted(data_dict_options.items(), key=lambda item: item[1]['salary'])
+print 'min', sorted_data[0][1]['salary']
+print 'max', sorted_data[len(sorted_data)-1][1]['salary']
+
 
 ### the input features we want to use 
 ### can be any key in the person-level dictionary (salary, director_fees, etc.) 
 feature_1 = "salary"
 feature_2 = "exercised_stock_options"
+feature_3 = 'total_payments'
 poi  = "poi"
-features_list = [poi, feature_1, feature_2]
+features_list = [poi, feature_1, feature_2, feature_3]
 data = featureFormat(data_dict, features_list )
 poi, finance_features = targetFeatureSplit( data )
 
@@ -58,15 +71,18 @@ poi, finance_features = targetFeatureSplit( data )
 ### you'll want to change this line to 
 ### for f1, f2, _ in finance_features:
 ### (as it's currently written, the line below assumes 2 features)
-for f1, f2 in finance_features:
-    plt.scatter( f1, f2 )
+for f1, f2, f3 in finance_features:
+    plt.scatter(f1, f2)
 plt.show()
 
 ### cluster here; create predictions of the cluster labels
 ### for the data and store them to a list called pred
+from sklearn.cluster import KMeans
 
-
-
+kmeans = KMeans(n_clusters=2, random_state=0)
+kmeans.fit(finance_features)
+pred = kmeans.predict(finance_features)
+print(pred)
 
 ### rename the "name" parameter when you change the number of features
 ### so that the figure gets saved to a different file
