@@ -46,14 +46,29 @@ data_dict.pop("TOTAL", 0)
 # find the max and min of exercised stock options
 data_dict_options = {k:v for k,v in data_dict.items() if data_dict[k]['exercised_stock_options'] != 'NaN'}
 sorted_data = sorted(data_dict_options.items(), key=lambda item: item[1]['exercised_stock_options'])
-print 'min', sorted_data[0][1]['exercised_stock_options']
-print 'max', sorted_data[len(sorted_data)-1][1]['exercised_stock_options']
+print 'min is ' + str(sorted_data[0][1]['exercised_stock_options'])
+print 'max is '+ str(sorted_data[len(sorted_data)-1][1]['exercised_stock_options'])
 
 # find the max and min of salary
 data_dict_options = {k:v for k,v in data_dict.items() if data_dict[k]['salary'] != 'NaN'}
 sorted_data = sorted(data_dict_options.items(), key=lambda item: item[1]['salary'])
-print 'min', sorted_data[0][1]['salary']
-print 'max', sorted_data[len(sorted_data)-1][1]['salary']
+print 'min is '+ str(sorted_data[0][1]['salary'])
+print 'max is'+ str(sorted_data[len(sorted_data)-1][1]['salary'])
+
+# rescale the salary feature
+from sklearn.preprocessing import MinMaxScaler
+salary = [item['salary'] for item in data_dict.values() if item['salary'] != 'NaN']
+scaler = MinMaxScaler()
+scaler.fit(salary)
+trans = scaler.transform([200000])
+print trans
+
+# rescale the exercised stock options feature
+options = [item['exercised_stock_options'] for item in data_dict.values() if item['exercised_stock_options'] != 'NaN']
+scaler = MinMaxScaler()
+scaler.fit(options)
+trans = scaler.transform([1000000])
+print trans
 
 
 ### the input features we want to use 
