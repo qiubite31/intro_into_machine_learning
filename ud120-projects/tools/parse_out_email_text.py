@@ -11,11 +11,12 @@ def parseOutText(f):
         in the email (space-separated) 
         
         example use case:
-        f = open("email_file_name.txt", "r")
+        from nltk.stem.snowball import SnowballStemmer
+        stemmer = SnowballStemmer(f = open("
+        email_file_name.txt", "r")
         text = parseOutText(f)
         
         """
-
 
     f.seek(0)  ### go back to beginning of file (annoying)
     all_text = f.read()
@@ -28,17 +29,24 @@ def parseOutText(f):
         text_string = content[1].translate(string.maketrans("", ""), string.punctuation)
 
         ### project part 2: comment out the line below
-        words = text_string
+        from nltk.stem.snowball import SnowballStemmer
+        stemmer = SnowballStemmer('english')
+        words = ''
+        text_string = text_string.replace('  ', ' ')
+        text_string = text_string.replace('\n', '')
+        for term in text_string.split(' '):
+            words += stemmer.stem(term) + ' '
 
+        
         ### split the text string into individual words, stem each word,
         ### and append the stemmed word to words (make sure there's a single
         ### space between each stemmed word)
-        
 
 
 
 
-    return words
+
+    return words.strip()
 
     
 
