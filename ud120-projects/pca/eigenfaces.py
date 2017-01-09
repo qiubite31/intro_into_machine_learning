@@ -81,7 +81,9 @@ X_train_pca = pca.transform(X_train)
 X_test_pca = pca.transform(X_test)
 print "done in %0.3fs" % (time() - t0)
 
-
+print 'Explaned Variane of PC'
+print 'first is : ' + str(pca.explained_variance_ratio_[0])
+print 'second is : ' + str(pca.explained_variance_ratio_[1])
 ###############################################################################
 # Train a SVM classification model
 
