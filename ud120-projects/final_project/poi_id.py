@@ -7,11 +7,23 @@ sys.path.append("../tools/")
 from feature_format import featureFormat, targetFeatureSplit
 from tester import dump_classifier_and_data
 
+'''
+financial features: ['salary', 'deferral_payments', 'total_payments', 'loan_advances', 'bonus', 
+'restricted_stock_deferred', 'deferred_income', 'total_stock_value', 'expenses', 'exercised_stock_options', 
+'other', 'long_term_incentive', 'restricted_stock', 'director_fees'] (all units are in US dollars)
+email features: ['to_messages', 'email_address', 'from_poi_to_this_person', 'from_messages', 
+'from_this_person_to_poi', 'shared_receipt_with_poi'] 
+(units are generally number of emails messages; notable exception is ‘email_address’, which is a text string)
+POI label: [‘poi’] (boolean, represented as integer)
+'''
+
+
 ### Task 1: Select what features you'll use.
 ### features_list is a list of strings, each of which is a feature name.
 ### The first feature must be "poi".
-features_list = ['poi','salary'] # You will need to use more features
 
+features_list = ['poi','salary','bonus','from_this_person_to_poi','from_poi_to_this_person'] # You will need to use more features
+features_list = ['poi','salary','from_this_person_to_poi'] # You will need to use more features
 ### Load the dictionary containing the dataset
 with open("final_project_dataset.pkl", "r") as data_file:
     data_dict = pickle.load(data_file)
@@ -22,7 +34,7 @@ with open("final_project_dataset.pkl", "r") as data_file:
 my_dataset = data_dict
 
 ### Extract features and labels from dataset for local testing
-data = featureFormat(my_dataset, features_list, sort_keys = True)
+data = featureFormat(my_dataset, features_list, sort_keys=True)
 labels, features = targetFeatureSplit(data)
 
 ### Task 4: Try a varity of classifiers
@@ -33,8 +45,9 @@ labels, features = targetFeatureSplit(data)
 
 # Provided to give you a starting point. Try a variety of classifiers.
 from sklearn.naive_bayes import GaussianNB
+from sklearn.svm import SVC
 clf = GaussianNB()
-
+# clf = SVC(kernel='rbf', C=1000, gamma='auto')
 ### Task 5: Tune your classifier to achieve better than .3 precision and recall 
 ### using our testing script. Check the tester.py script in the final project
 ### folder for details on the evaluation method, especially the test_classifier
@@ -46,6 +59,24 @@ clf = GaussianNB()
 from sklearn.cross_validation import train_test_split
 features_train, features_test, labels_train, labels_test = \
     train_test_split(features, labels, test_size=0.3, random_state=42)
+
+clf.fit(features_train, labels_train)
+pred = clf.predict(features_test)
+
+from sklearn.metrics import accuracy_score, precision_score, recall_score, classification_report, confusion_matrix
+
+acc = accuracy_score(labels_test, pred)
+print acc
+
+matrix = confusion_matrix(labels_test, pred)
+print(matrix)
+
+prec = precision_score(labels_test, pred)
+print(prec)
+
+recall = recall_score(labels_test, pred)
+print(recall)
+
 
 ### Task 6: Dump your classifier, dataset, and features_list so anyone can
 ### check your results. You do not need to change anything below, but make sure
